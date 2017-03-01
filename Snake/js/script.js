@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
   var dir = "droite";
-  var speed = 30; // intervalle de rafraichissement de l'image (1sec)
+  var speed = 100; // intervalle de rafraichissement de l'image (1sec)
   var canvas = $("#canvas")[0];
   var wMap = 500;
   var hMap = 500;
