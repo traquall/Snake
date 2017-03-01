@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
   var dir = "droite";
-  var speed = 100; // intervalle de rafraichissement de l'image (1sec)
+  var speed = 30; // intervalle de rafraichissement de l'image (1sec)
   var canvas = $("#canvas")[0];
   var wMap = 500;
   var hMap = 500;
@@ -10,6 +10,7 @@ $(document).ready(function(){
   var snake = [];
   var initPosX = 5 * pas;
   var initPosY = 5 * pas;
+  var score = 0;
   var fruit = { x:0, y:0};
 
   function init(){
@@ -23,15 +24,15 @@ $(document).ready(function(){
   init();
 
   function animate(){
-
-    console.log("coucou");
-
     move();
+    checkFruit();
     if(checkCollision() == false)
       regame();
 
     paint();
 
+    // affichage du score
+    $("#score").text("Score: "+score);
   }
 
   function paint(){
@@ -54,28 +55,48 @@ $(document).ready(function(){
   }
 
   function move(){
-    var newCell = snake.pop();
-
-
+    var X;
+    var Y;
 
     if(dir == "gauche"){
-      newCell.x = snake[0].x - pas;
-      newCell.y = snake[0].y;
+      X = snake[0].x - pas;
+      Y = snake[0].y;
     }
     else if (dir == "droite"){
-      newCell.x = snake[0].x + pas;
-      newCell.y = snake[0].y;
+      X = snake[0].x + pas;
+      Y = snake[0].y;
     }
     else if (dir == "haut") {
-      newCell.x = snake[0].x;
-      newCell.y = snake[0].y - pas;
+      X = snake[0].x;
+      Y = snake[0].y - pas;
     }
     else if (dir == "bas") {
-      newCell.x = snake[0].x;
-      newCell.y = snake[0].y + pas;
+      X = snake[0].x;
+      Y = snake[0].y + pas;
+    }
+
+    if(checkFruit(X, Y)){
+      var newCell = {x: X, y: Y};
+    }
+    else{
+      var newCell = snake.pop();
+      newCell.x = X;
+      newCell.y = Y;
     }
 
     snake.unshift(newCell);
+  }
+
+  function checkFruit(x, y){
+    for (var i = 0; i < snake.length; i++) {
+      if(x == fruit.x && y == fruit.y){
+        score++;
+        createFruit();
+        return true;
+      }
+    }
+    return false;
+
   }
 
   function checkCollision(){
@@ -133,8 +154,8 @@ $(document).ready(function(){
 
   function createFruit(){
     fruit = {
-      x: pas * Math.floor((Math.random() * (500-pas)/pas) + 1),
-      y: pas * Math.floor((Math.random() * (500-pas)/pas) + 1)
+      x: pas * Math.floor((Math.random() * 48) + 1),
+      y: pas * Math.floor((Math.random() * 48) + 1)
     };
   }
 
